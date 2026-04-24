@@ -7,7 +7,7 @@ import java.net.Socket;
 public class ManejadorCliente implements Runnable {
     private Socket socketCliente;
     private String nombreCliente;
-    private PrintWriter salida; // Canal de salida hacia ESTE cliente específico
+    private PrintWriter salida; 
 
     public ManejadorCliente(Socket socket) {
         this.socketCliente = socket;
@@ -19,31 +19,42 @@ public class ManejadorCliente implements Runnable {
             BufferedReader entrada = new BufferedReader(new InputStreamReader(socketCliente.getInputStream()));
             salida = new PrintWriter(socketCliente.getOutputStream(), true);
             
-            // 1. Registramos este canal de salida en la lista global del servidor
-            Servidor.agregarEscritor(salida);
+            while (true) {
+                nombreCliente = entrada.readLine();
+                if (nombreCliente == null) {
+                    return;
+                }
+                
+                
+                if (Servidor.registrarNombre(nombreCliente)) {
+                    salida.println("ACEPTADO"); 
+                    break; 
+                } else {
+                    salida.println("RECHAZADO");
+                }
+            }
 
-            // 2. Leemos el nombre y avisamos A TODOS
-            nombreCliente = entrada.readLine();
-            System.out.println(nombreCliente + " se ha conectado."); // Imprime en consola del server
+            
+            Servidor.agregarEscritor(salida);
+            System.out.println(nombreCliente + " se ha conectado."); 
             Servidor.broadcast("---> El usuario '" + nombreCliente + "' ha entrado al chat.");
 
-            // 3. Bucle para escuchar mensajes de este cliente y reenviarlos A TODOS
             String mensaje;
             while ((mensaje = entrada.readLine()) != null) {
                 Servidor.broadcast("[" + nombreCliente + "]: " + mensaje);
             }
 
         } catch (IOException e) {
-            // Error de conexión, se maneja en el finally
         } finally {
-            // Si el cliente se desconecta (Punto 8 del proyecto)
             if (salida != null) {
-                Servidor.removerEscritor(salida); // Lo quitamos de la lista
+                Servidor.removerEscritor(salida); 
             }
             try {
                 socketCliente.close();
-                System.out.println(nombreCliente + " se ha desconectado."); // Consola server
                 if (nombreCliente != null) {
+                    
+                    Servidor.removerNombre(nombreCliente); 
+                    System.out.println(nombreCliente + " se ha desconectado."); 
                     Servidor.broadcast("<--- El usuario '" + nombreCliente + "' ha salido del chat.");
                 }
             } catch (IOException e) {

@@ -7,20 +7,34 @@ import java.util.Scanner;
 
 public class Cliente {
     public static void main(String[] args) {
-        String ipServidor = "172.25.3.39";
+        // IP DEL SERVIDOR
+        String ipServidor = "172.25.3.39"; 
         int puerto = 5000; 
         Scanner teclado = new Scanner(System.in);
 
         try {
-            System.out.print("Ingresa tu nombre de usuario para el chat: ");
-            String miNombre = teclado.nextLine();
-
             Socket socket = new Socket(ipServidor, puerto);
             PrintWriter salida = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            // --- EL NUEVO HILO DE LECTURA ---
-            // Este hilo correrá de fondo escuchando los mensajes que reenvía el servidor
+            String miNombre = "";
+            
+            while (true) {
+                System.out.print("Ingresa tu nombre de usuario para el chat: ");
+                miNombre = teclado.nextLine();
+                
+                salida.println(miNombre); 
+                
+                String respuesta = entrada.readLine(); 
+                
+                if (respuesta != null && respuesta.equals("ACEPTADO")) {
+                    System.out.println("¡Nombre aceptado! (Escribe 'salir' para desconectarte)\n");
+                    break;
+                } else {
+                    System.out.println("Error: Ese usuario ya está conectado o el nombre es inválido. Intenta con otro.\n");
+                }
+            }
+
             Thread hiloLectura = new Thread(() -> {
                 try {
                     String mensajeServidor;
@@ -31,23 +45,19 @@ public class Cliente {
                     System.out.println("\nConexión con el servidor terminada.");
                 }
             });
-            hiloLectura.start(); // Arrancamos el hilo "oyente"
-
-            // --- EL HILO PRINCIPAL (Escritura) ---
-            salida.println(miNombre); // Enviamos el nombre
-            System.out.println("¡Conectado! (Escribe 'salir' para desconectarte)");
-
+            hiloLectura.start(); 
+                        
             while (true) {
                 String mensaje = teclado.nextLine();
                 if (mensaje.equalsIgnoreCase("salir")) {
                     break; 
                 }
-                salida.println(mensaje); // Enviamos lo que escribimos
+                salida.println(mensaje); 
             }
             
             socket.close();
             teclado.close();
-            System.exit(0); // Forzamos el cierre completo del cliente
+            System.exit(0); 
             
         } catch (IOException e) {
             System.out.println("Error: No se pudo conectar al servidor.");

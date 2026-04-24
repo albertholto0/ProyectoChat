@@ -5,11 +5,9 @@ import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
 
-// 172.25.3.39
-
 public class Servidor {
-    // Esta es nuestra "libreta de direcciones". Guarda los canales de salida de cada cliente.
     private static Set<PrintWriter> escritores = new HashSet<>();
+    private static Set<String> nombresUsuarios = new HashSet<>();
 
     public static void main(String[] args) {
         int puerto = 5000; 
@@ -32,22 +30,31 @@ public class Servidor {
         }
     }
 
-    // --- NUEVOS MÉTODOS PARA BROADCASTING ---
-
-    // Este método toma un mensaje y lo dispara a todos los clientes en la libreta
     public static synchronized void broadcast(String mensaje) {
         for (PrintWriter escritor : escritores) {
             escritor.println(mensaje);
         }
     }
 
-    // Registra a un nuevo cliente
     public static synchronized void agregarEscritor(PrintWriter escritor) {
         escritores.add(escritor);
     }
 
-    // Elimina a un cliente cuando se va
     public static synchronized void removerEscritor(PrintWriter escritor) {
         escritores.remove(escritor);
+    }
+
+    public static synchronized boolean registrarNombre(String nombre) {
+        if (nombresUsuarios.contains(nombre) || nombre.isBlank()) {
+            return false; 
+        }
+        nombresUsuarios.add(nombre);
+        return true; 
+    }
+
+    public static synchronized void removerNombre(String nombre) {
+        if (nombre != null) {
+            nombresUsuarios.remove(nombre);
+        }
     }
 }
