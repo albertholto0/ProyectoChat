@@ -25,7 +25,7 @@ public class ManejadorCliente implements Runnable {
             // 2. Leemos el nombre y avisamos A TODOS
             nombreCliente = entrada.readLine();
             System.out.println(nombreCliente + " se ha conectado."); // Imprime en consola del server
-            Servidor.broadcast("📢 El usuario '" + nombreCliente + "' ha entrado al chat.");
+            Servidor.broadcast("---> El usuario '" + nombreCliente + "' ha entrado al chat.");
 
             // 3. Bucle para escuchar mensajes de este cliente y reenviarlos A TODOS
             String mensaje;
@@ -44,7 +44,7 @@ public class ManejadorCliente implements Runnable {
                 socketCliente.close();
                 System.out.println(nombreCliente + " se ha desconectado."); // Consola server
                 if (nombreCliente != null) {
-                    Servidor.broadcast("🚪 El usuario '" + nombreCliente + "' ha salido del chat.");
+                    Servidor.broadcast("<--- El usuario '" + nombreCliente + "' ha salido del chat.");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
