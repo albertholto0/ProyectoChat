@@ -53,8 +53,7 @@ public class Servidor {
         PrintWriter escritorDestino = clientes.get(destinatario);
         
         if (escritorDestino != null) {
-            escritorDestino.println("(MSG Privado de " + remitente + "): " + mensaje);
-            escritorDestino.println("   -> (Para responder por privado usa: /msg " + remitente + ")");
+            escritorDestino.println("(ChatPrivado con " + remitente + "): " + mensaje);
             return true; 
         }
         return false; 
