@@ -2,12 +2,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Servidor {
-    private static Set<PrintWriter> escritores = new HashSet<>();
-    private static Set<String> nombresUsuarios = new HashSet<>();
+    private static Map<String, PrintWriter> clientes = new HashMap<>();
 
     public static void main(String[] args) {
         int puerto = 5000; 
@@ -30,31 +29,35 @@ public class Servidor {
         }
     }
 
+    public static synchronized boolean registrarCliente(String nombre, PrintWriter escritor) {
+        if (nombre == null || nombre.isBlank() || clientes.containsKey(nombre)) {
+            return false; 
+        }
+        clientes.put(nombre, escritor); 
+        return true; 
+    }
+
+    public static synchronized void removerCliente(String nombre) {
+        if (nombre != null) {
+            clientes.remove(nombre);
+        }
+    }
+
     public static synchronized void broadcast(String mensaje) {
-        for (PrintWriter escritor : escritores) {
+        for (PrintWriter escritor : clientes.values()) {
             escritor.println(mensaje);
         }
     }
 
-    public static synchronized void agregarEscritor(PrintWriter escritor) {
-        escritores.add(escritor);
-    }
-
-    public static synchronized void removerEscritor(PrintWriter escritor) {
-        escritores.remove(escritor);
-    }
-
-    public static synchronized boolean registrarNombre(String nombre) {
-        if (nombresUsuarios.contains(nombre) || nombre.isBlank()) {
-            return false; 
+    public static synchronized boolean enviarPrivado(String remitente, String destinatario, String mensaje) {
+        // Buscamos el canal de salida del destinatario en nuestro diccionario
+        PrintWriter escritorDestino = clientes.get(destinatario);
+        
+        if (escritorDestino != null) {
+            // Si existe, le enviamos el mensaje solo a él
+            escritorDestino.println("(Privado de " + remitente + "): " + mensaje);
+            return true; // Éxito
         }
-        nombresUsuarios.add(nombre);
-        return true; 
-    }
-
-    public static synchronized void removerNombre(String nombre) {
-        if (nombre != null) {
-            nombresUsuarios.remove(nombre);
-        }
+        return false; // El usuario no existe o se desconectó
     }
 }

@@ -7,7 +7,6 @@ import java.util.Scanner;
 
 public class Cliente {
     public static void main(String[] args) {
-        // IP DEL SERVIDOR
         String ipServidor = "172.25.3.38"; 
         int puerto = 5000; 
         Scanner teclado = new Scanner(System.in);
@@ -22,16 +21,20 @@ public class Cliente {
             while (true) {
                 System.out.print("Ingresa tu nombre de usuario para el chat: ");
                 miNombre = teclado.nextLine();
-                
                 salida.println(miNombre); 
-                
                 String respuesta = entrada.readLine(); 
                 
                 if (respuesta != null && respuesta.equals("ACEPTADO")) {
-                    System.out.println("¡Nombre aceptado! (Escribe 'salir' para desconectarte)\n");
-                    break;
+                    System.out.println("\n¡Nombre aceptado! ------------------------");
+                    System.out.println(" COMANDOS:");
+                    System.out.println(" - Escribe normal para hablar con todos.");
+                    System.out.println(" - /msg [usuario] : Inicia chat privado.");
+                    System.out.println(" - /global        : Vuelve al chat global.");
+                    System.out.println(" - salir          : Desconectarse.");
+                    System.out.println("------------------------------------------\n");
+                    break; 
                 } else {
-                    System.out.println("Error: Ese usuario ya está conectado o el nombre es inválido. Intenta con otro.\n");
+                    System.out.println("Error: Usuario conectado o inválido. Intenta otro.\n");
                 }
             }
 
@@ -46,7 +49,7 @@ public class Cliente {
                 }
             });
             hiloLectura.start(); 
-                        
+
             while (true) {
                 String mensaje = teclado.nextLine();
                 if (mensaje.equalsIgnoreCase("salir")) {
