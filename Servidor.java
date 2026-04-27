@@ -50,14 +50,13 @@ public class Servidor {
     }
 
     public static synchronized boolean enviarPrivado(String remitente, String destinatario, String mensaje) {
-        // Buscamos el canal de salida del destinatario en nuestro diccionario
         PrintWriter escritorDestino = clientes.get(destinatario);
         
         if (escritorDestino != null) {
-            // Si existe, le enviamos el mensaje solo a él
-            escritorDestino.println("(Privado de " + remitente + "): " + mensaje);
-            return true; // Éxito
+            escritorDestino.println("(MSG Privado de " + remitente + "): " + mensaje);
+            escritorDestino.println("   -> (Para responder por privado usa: /msg " + remitente + ")");
+            return true; 
         }
-        return false; // El usuario no existe o se desconectó
+        return false; 
     }
 }
