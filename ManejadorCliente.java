@@ -56,7 +56,23 @@ public class ManejadorCliente implements Runnable {
                     enModoPrivado = false; // Salimos del modo privado
                     destinatarioPrivado = "";
                     salida.println("Has vuelto al chat global.");
-                } 
+                }
+
+                else if (mensaje.startsWith("/file ")) {
+                    String[] partes = mensaje.split(" ", 4); 
+                    if (partes.length == 4) {
+                        String destino = partes[1];
+                        String nombreArch = partes[2];
+                        String datos = partes[3];
+                        
+                        if (Servidor.enviarArchivo(nombreCliente, destino, nombreArch, datos)) {
+                            salida.println("Archivo '" + nombreArch + "' enviado con éxito.");
+                        } else {
+                            salida.println("Error: El usuario '" + destino + "' no existe.");
+                        }
+                    }
+                }
+
                 else {
                     if (enModoPrivado) {
                         boolean exito = Servidor.enviarPrivado(nombreCliente, destinatarioPrivado, mensaje);

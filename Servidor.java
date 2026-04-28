@@ -56,4 +56,15 @@ public class Servidor {
         }
         return false; 
     }
+
+    // Función para rutear archivos codificados
+    public static synchronized boolean enviarArchivo(String remitente, String destinatario, String nombreArchivo, String datosBase64) {
+        PrintWriter escritorDestino = clientes.get(destinatario);
+        if (escritorDestino != null) {
+            escritorDestino.println("/archivo " + remitente + " " + nombreArchivo + " " + datosBase64);
+            return true; 
+        }
+        return false; 
+    }
+
 }
