@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class Cliente {
     public static void main(String[] args) {
-        String ipServidor = "172.25.3.39"; 
+        String ipServidor = "172.25.3.38"; 
         int puerto = 5000; 
         Scanner teclado = new Scanner(System.in);
 
