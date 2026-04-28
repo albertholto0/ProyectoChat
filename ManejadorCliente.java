@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ManejadorCliente implements Runnable {
-    private Socket socketCliente;
+    private final Socket socketCliente;
     private String nombreCliente;
     private PrintWriter salida; 
     
@@ -85,7 +85,6 @@ public class ManejadorCliente implements Runnable {
                     Servidor.broadcast("🚪 El usuario '" + nombreCliente + "' ha salido del chat.");
                 }
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }

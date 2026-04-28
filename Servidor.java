@@ -6,13 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Servidor {
-    private static Map<String, PrintWriter> clientes = new HashMap<>();
+    private static final Map<String, PrintWriter> clientes = new HashMap<>();
 
     public static void main(String[] args) {
         int puerto = 5000; 
 
-        try {
-            ServerSocket servidor = new ServerSocket(puerto);
+        try (ServerSocket servidor = new ServerSocket(puerto)){
             System.out.println("--- SERVIDOR DE CHAT MULTIHILO INICIADO ---");
             System.out.println("Escuchando en el puerto " + puerto + "...\n");
             
@@ -25,7 +24,6 @@ public class Servidor {
             
         } catch (IOException e) {
             System.out.println("Error crítico en el servidor: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
