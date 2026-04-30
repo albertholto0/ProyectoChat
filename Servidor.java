@@ -57,7 +57,6 @@ public class Servidor {
         return false; 
     }
 
-    // Función para rutear archivos codificados
     public static synchronized boolean enviarArchivo(String remitente, String destinatario, String nombreArchivo, String datosBase64) {
         PrintWriter escritorDestino = clientes.get(destinatario);
         if (escritorDestino != null) {
@@ -65,6 +64,15 @@ public class Servidor {
             return true; 
         }
         return false; 
+    }
+
+    public static synchronized void enviarArchivoGlobal(String remitente, String nombreArchivo, String datosBase64) {
+        for (Map.Entry<String, PrintWriter> entrada : clientes.entrySet()) {
+            if (!entrada.getKey().equals(remitente)) {
+                PrintWriter escritorDestino = entrada.getValue();
+                escritorDestino.println("/archivo " + remitente + "(GLOBAL) " + nombreArchivo + " " + datosBase64);
+            }
+        }
     }
 
 }

@@ -65,10 +65,15 @@ public class ManejadorCliente implements Runnable {
                         String nombreArch = partes[2];
                         String datos = partes[3];
                         
-                        if (Servidor.enviarArchivo(nombreCliente, destino, nombreArch, datos)) {
-                            salida.println("Archivo '" + nombreArch + "' enviado con éxito.");
+                        if (destino.equalsIgnoreCase("global")) {
+                            Servidor.enviarArchivoGlobal(nombreCliente, nombreArch, datos);
+                            salida.println("Archivo '" + nombreArch + "' enviado a todos con éxito.");
                         } else {
-                            salida.println("Error: El usuario '" + destino + "' no existe.");
+                            if (Servidor.enviarArchivo(nombreCliente, destino, nombreArch, datos)) {
+                                salida.println("Archivo '" + nombreArch + "' enviado con éxito a " + destino + ".");
+                            } else {
+                                salida.println("Error: El usuario '" + destino + "' no existe.");
+                            }
                         }
                     }
                 }
@@ -77,15 +82,13 @@ public class ManejadorCliente implements Runnable {
                     if (enModoPrivado) {
                         boolean exito = Servidor.enviarPrivado(nombreCliente, destinatarioPrivado, mensaje);
                         if (exito) {
-                            // Te imprimimos el mensaje a ti mismo para que sepas qué enviaste
                             salida.println("(Para " + destinatarioPrivado + "): " + mensaje);
                         } else {
                             salida.println("Error: El usuario '" + destinatarioPrivado + "' no existe o se fue.");
-                            enModoPrivado = false; // Lo regresamos al global por seguridad
+                            enModoPrivado = false;
                             salida.println("Has vuelto al chat global automáticamente.");
                         }
                     } else {
-                        // Si no estamos en privado, es un mensaje global normal
                         Servidor.broadcast("[" + nombreCliente + "]: " + mensaje);
                     }
                 }

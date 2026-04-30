@@ -34,7 +34,8 @@ public class Cliente {
                         System.out.println(" - Escribe normal para hablar con todos.");
                         System.out.println(" - /msg [usuario] : Inicia chat privado.");
                         System.out.println(" - /global        : Vuelve al chat global.");
-                        System.out.println(" - /enviar [usuario] [ruta] : Transfiere un archivo.");
+                        System.out.println(" - /enviar [usuario] [ruta] : Transfiere archivo privado.");
+                        System.out.println(" - /enviar global [ruta]    : Transfiere archivo a TODOS.");
                         System.out.println(" - salir          : Desconectarse.");
                         System.out.println("------------------------------------------\n");
                         break;
@@ -55,7 +56,6 @@ public class Cliente {
                                     String base64 = partes[3];
                                     
                                     try {
-                                        // Decodificamos de Base64 a bytes puros
                                         byte[] archivoBytes = Base64.getDecoder().decode(base64);
                                         try (
                                                 FileOutputStream fos = new FileOutputStream("RECIBIDO_" + nombreArch)) {
