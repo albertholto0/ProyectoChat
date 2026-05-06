@@ -36,7 +36,7 @@ public class ManejadorCliente implements Runnable {
             }
 
             System.out.println(nombreCliente + " se ha conectado."); 
-            Servidor.broadcast("El usuario '" + nombreCliente + "' ha entrado al chat.");
+            Servidor.broadcast("---> El usuario '" + nombreCliente + "' ha entrado al chat.");
 
             String mensaje;
             while ((mensaje = entrada.readLine()) != null) {
@@ -101,7 +101,7 @@ public class ManejadorCliente implements Runnable {
                 if (nombreCliente != null) {
                     Servidor.removerCliente(nombreCliente); 
                     System.out.println(nombreCliente + " se ha desconectado."); 
-                    Servidor.broadcast("🚪 El usuario '" + nombreCliente + "' ha salido del chat.");
+                    Servidor.broadcast("<--- El usuario '" + nombreCliente + "' ha salido del chat.");
                 }
             } catch (IOException e) {
             }
