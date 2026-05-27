@@ -9,7 +9,6 @@ public class ManejadorCliente implements Runnable {
     private String nombreCliente;
     private PrintWriter salida; 
     
-    // NUEVO: Variables de estado para saber en qué modo está escribiendo el usuario
     private boolean enModoPrivado = false;
     private String destinatarioPrivado = "";
 
